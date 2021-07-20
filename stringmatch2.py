@@ -97,7 +97,7 @@ def genRandSentences(maxsl=4, n=20):
     return l
 
 def getDataset():
-    f = open('paperTitles.txt', 'r')
+    f = open('paperTitles.txt', 'r') # paperTitles.txt generated from the titles of papers in the arxiv Dataset (https://www.kaggle.com/neelshah18/arxivdataset)
     titles = pd.Series(f.read().split('\n'))
     l1 = titles[titles.index % 2 != 0]
     l2 = titles[titles.index % 2 == 0]
@@ -105,8 +105,4 @@ def getDataset():
     return l1, l2
 
 l1, l2 = getDataset()
-
-l1 = l1[:1000]
-l2 = l2[:1000]
-
-res = stringMatch(l1, l2)
+res = stringMatch(l1[:1000], l2[:1000])
