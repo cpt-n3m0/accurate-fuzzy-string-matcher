@@ -10,6 +10,22 @@ def jaccard_distance(a, b):
 
     return 1.0 * len(a&b)/len(a|b)
 
+def cosine_similarity(a, b):
+    vec1 = Counter(a)
+    vec2 = Counter(b)
+    
+    intersection = set(vec1.keys()) & set(vec2.keys())
+    numerator = sum([vec1[x] * vec2[x] for x in intersection])
+
+    sum1 = sum([vec1[x]**2 for x in vec1.keys()])
+    sum2 = sum([vec2[x]**2 for x in vec2.keys()])
+    denominator = math.sqrt(sum1) * math.sqrt(sum2)
+
+    if not denominator:
+        return 0.0
+
+    return float(numerator) / denominator
+
 def ngSim(s1, s2):
 
     largestWordLen = max(map(len, (s1 + ' '+ s2).split(' ')))
@@ -20,7 +36,7 @@ def ngSim(s1, s2):
         n = weights[i]
         s1grams = nltk.ngrams(s1, n)
         s2grams = nltk.ngrams(s2, n)
-        scores[i] = jaccard_distance(s1grams, s2grams)
+        scores[i] = cosine_similarity(s1grams, s2grams)
 
     return ((weights * scores).sum()/weights.sum())
 
