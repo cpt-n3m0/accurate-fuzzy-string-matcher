@@ -1,8 +1,12 @@
+import math
+from collections import Counter
+
 import nltk
 import numpy as np
 import pandas as pd
 
 
+# jaccard and cosine scoring functions courtesy of https://gist.github.com/gaulinmp/da5825de975ed0ea6a24186434c24fe4
 def jaccard_distance(a, b):
     """Calculate the jaccard distance between sets A and B"""
     a = set(a)
@@ -80,6 +84,7 @@ def stringMatch(rl1, rl2):
     for i in np.arange(lenl1):
         v = l1[i]
         scores.iloc[i] = pd.Series(l2).map(lambda x: ngSim(x, v)).values
+        # scores.iloc[i] = np.array(list(map(lambda x: ngSim(x, v), l2)))
 
     print('Finding matches..')
 
@@ -115,10 +120,10 @@ def genRandSentences(maxsl=4, n=20):
 def getDataset():
     f = open('paperTitles.txt', 'r') # paperTitles.txt generated from the titles of papers in the arxiv Dataset (https://www.kaggle.com/neelshah18/arxivdataset)
     titles = pd.Series(f.read().split('\n'))
-    l1 = titles[titles.index % 2 != 0]
-    l2 = titles[titles.index % 2 == 0]
+    l1 = titles[titles.index % 2 != 0].values
+    l2 = titles[titles.index % 2 == 0].values
 
     return l1, l2
 
 l1, l2 = getDataset()
-res = stringMatch(l1[:1000], l2[:1000])
+res = stringMatch(l1[:200], l2[:200])
